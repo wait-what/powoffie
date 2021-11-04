@@ -1,3 +1,5 @@
+extern crate strip_ansi_escapes;
+
 use std::{env::args, process::Command, thread::sleep};
 use tiny_http::{Method, Response, Server};
 
@@ -28,8 +30,20 @@ fn main() {
                         continue;
                     };
 
-                    let mut body = String::new();
-                    request.as_reader().read_to_string(&mut body).unwrap();
+                    let body = {
+                        let mut raw_body = String::new();
+                        request.as_reader().read_to_string(&mut raw_body).unwrap();
+
+                        let clean_body = strip_ansi_escapes::strip(raw_body.as_bytes()).unwrap();
+
+                        match String::from_utf8(clean_body) {
+                            Ok(body) => body,
+                            Err(_) => {
+                                request.respond(Response::empty(500)).unwrap();
+                                continue;
+                            }
+                        }
+                    };
 
                     println!("=> {}", body);
 
@@ -45,18 +59,14 @@ fn main() {
                                     .arg(format!("Powoffie running in {} seconds", timeout))
                                     .spawn()
                                     .unwrap();
-    
+
                                 sleep(std::time::Duration::from_secs(timeout));
                             }
-    
-                            sleep(std::time::Duration::from_secs(2));
-    
-                            Command::new("sudo")
-                                .arg("poweroff")
-                                .spawn()
-                                .unwrap();
-                        });
 
+                            sleep(std::time::Duration::from_secs(2));
+
+                            Command::new("sudo").arg("poweroff").spawn().unwrap();
+                        });
                     } else {
                         request.respond(Response::empty(401)).unwrap();
                     }
