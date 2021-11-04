@@ -12,17 +12,53 @@
         body {
             font-family: 'Fira Sans', sans-serif;
             background-color: #1b1b1b;
-            color: #fff;
+            color: #fff;      
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            justify-content: center;
+        }
+
+        input {
+            width: 240px;
+            padding: 10px;
+            background: #ffffff12;
+            border: 1px solid #80808047;
+            border-radius: 25px;
+            color: #ffffffba;
+            margin: 5px 0;
+            display: flex;
+        }
+
+        input:focus {
+            border: #1b1b1b;
+        }
+
+        button {
+            width: 100px;
+            padding: 10px;
+            background: #ffffff12;
+            border: 1px solid #80808047;
+            border-radius: 25px;
+            color: #ffffff93;
+            cursor: pointer;
+            margin: 2px 0;
+        }      
+
+        button:hover {
+            background: #ffffff28;
         }
     </style>
 </head>
 <body>
     <h1>Powoffie</h1>
 
-    <input type="text" id="token" placeholder="Token" /> <br>
-    <input type="text" id="password" placeholder="Password" /> <br>
+    <input type="text" id="token" placeholder="Token" />
+    <input type="text" id="password" placeholder="Password" />
     <button onclick="submit()" id="submit">Submit</button>
-
+    
     <div id="output"></div>
 
     <script>
