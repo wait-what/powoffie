@@ -1,0 +1,10 @@
+{
+    "bind": "0.0.0.0:6969",
+    "relay_endpoint": "http://localhost:6969/",
+    "host_endpoint": "http://localhost:6968/",
+    "rate_limit": 1,
+    "tokens": {
+        "sussy": "person_1",
+        "sussus": "person_2"
+    }
+}

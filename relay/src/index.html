@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powoffie</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Fira+Sans');
+
+        body {
+            font-family: 'Fira Sans', sans-serif;
+            background-color: #1b1b1b;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Powoffie</h1>
+
+    <input type="text" id="token" placeholder="Token" /> <br>
+    <input type="text" id="password" placeholder="Password" /> <br>
+    <button onclick="submit()" id="submit">Submit</button>
+
+    <div id="output"></div>
+
+    <script>
+        function submit() {
+            if (!document.getElementById('token').value || !document.getElementById('password').value) {
+                document.getElementById('output').innerHTML = 'Missing token and/or password'
+                return
+            }
+
+            axios.post('{{endpoint}}', document.getElementById('password').value, {
+                headers: {
+                    'Authorization': document.getElementById('token').value
+                }
+            })
+            .then(response => {
+                document.getElementById('output').innerHTML = 'Congratulations, you guessed it!'
+                document.getElementById('submit').disabled = true
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (response.status === 401) {
+                    document.getElementById('output').innerHTML = 'Invalid token'
+                }
+
+                else if (response.status === 403) {
+                    document.getElementById('output').innerHTML = 'Invalid password'
+                }
+
+                else if (response.status === 410) {
+                    document.getElementById('output').innerHTML = 'Couldn\'t connect to host. Last winner: ' + response.data
+                }
+
+                else if (response.status === 429) {
+                    document.getElementById('output').innerHTML = 'Rate limited. Try again in ' + response.data + ' seconds.'
+                }
+
+                else if (response.status === 500)  {
+                    document.getElementById('output').innerHTML = 'Internal server error'
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+[profile.release]
+lto = 'thin'
+
+[workspace]
+members = ["host", "relay"]
