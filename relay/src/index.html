@@ -20,40 +20,144 @@
             min-height: 100vh;
             margin: 0;
         }
-
-        input, button {
-            width: 240px;
+        
+        .content {
+            width: 256px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+        }
+        
+        input {
             padding: 10px;
             background: #ffffff12;
-            border: 1px solid #80808047;
             border-radius: 25px;
             color: #ffffffba;
-            margin: 5px 0;
+            font-family: inherit;
+            caret-color: #ffffffba;
+            border: none;
         }
-
+        
+        input:focus {
+            outline: none !important;
+            border: 2px solid #ab3a3a;
+            padding: 8px;
+        }
+        
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px #ffffff05 inset;
+            -webkit-text-fill-color: #ffffffa8 !important;
+            transition: background-color 5000s ease-in-out 0s;
+            border: 2px solid #80808047;
+            color: #ffffffa8 !important;
+            padding: 8px;
+        }
+        
         button {
             cursor: pointer;
-            width: 120px;
+            width: 40%;
+            margin: 5px 0;
+            padding: 10px;
+            background: #ffffff12;
+            border-radius: 25px;
+            color: #ffffffba;
+            font-family: inherit;
+            border: none;
         }      
 
         button:hover {
-            background: #ffffff28;
+            background: #ffffff1c;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+        }
+        
+        span {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: #ab3a3a;
+            
+        }
+        
+        section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: 5px 0;
+        }
+
+        section div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0 10px;
+            justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        #output {
+            width: 100%;
+            height: 15px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 240px), only screen and (max-device-width: 240px) { 
+            .content {
+                width: 98%;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Powoffie</h1>
-
-    <input type="text" id="token" placeholder="Token" />
-    <input type="text" id="password" placeholder="Password" />
-    <button onclick="submit()" id="submit">Submit</button>
+    <div class="content">
+        <h1>Powoffie</h1>
     
-    <div id="output"></div>
+        <section>
+            <div>
+                <p>Token</p><span id="tokenOutput"></span>
+            </div>
+            <input type="text" id="token" placeholder="Enter your token" />
+            
+        </section>
+        
+        <section>
+            <div>
+                <p>Password</p><span id="passwordOutput"></span>
+            </div>
+            <input type="text" id="password" placeholder="Enter your password" />
+            
+        </section>
+        
+        <button onclick="submit()" id="submit">Submit</button>
+        
+        <p id="output"></p>
+    </div>
 
     <script>
         function submit() {
+
+            document.getElementById('passwordOutput').innerHTML = ''
+            document.getElementById('tokenOutput').innerHTML = ''
+
             if (!document.getElementById('token').value || !document.getElementById('password').value) {
-                document.getElementById('output').innerHTML = 'Missing token and/or password'
+                if (!document.getElementById('token').value) {
+                    document.getElementById('tokenOutput').innerHTML = 'Missing'
+                } 
+
+                if (!document.getElementById('password').value) {
+                    document.getElementById('passwordOutput').innerHTML = 'Missing'
+                } 
                 return
             }
 
@@ -70,11 +174,11 @@
                 const response = error.response
 
                 if (response.status === 401) {
-                    document.getElementById('output').innerHTML = 'Invalid token'
-                }
+                    document.getElementById('outputToken').innerHTML = 'Invalid token'
+                } 
 
                 else if (response.status === 403) {
-                    document.getElementById('output').innerHTML = 'Invalid password'
+                    document.getElementById('outputPassword').innerHTML = 'Invalid password'
                 }
 
                 else if (response.status === 410) {
